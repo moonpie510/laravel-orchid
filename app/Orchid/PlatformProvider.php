@@ -35,7 +35,7 @@ class PlatformProvider extends OrchidServiceProvider
     {
         return [
             Menu::make('Клиенты')
-                ->icon('user')
+                ->icon('bs.person')
                 ->route('platform.clients')
                 ->title('Клиенты'),
 
