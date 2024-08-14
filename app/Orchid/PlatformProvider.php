@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid;
 
+use Illuminate\Support\Facades\Auth;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
 use Orchid\Platform\OrchidServiceProvider;
@@ -37,7 +38,13 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('Клиенты')
                 ->icon('bs.person')
                 ->route('platform.clients')
-                ->title('Клиенты'),
+                ->title('Клиенты')
+                ->permission('platform.clients'),
+
+            Menu::make('Аналитика и отчеты')
+                ->icon('bs.chart')
+                ->route('platform.analyticsAndReports')
+                ->canSee(Auth::user()->hasAccess('platform.analytics') && Auth::user()->hasAccess('platform.reports')),
 
 //            Menu::make('Get Started')
 //                ->icon('bs.book')
@@ -65,24 +72,24 @@ class PlatformProvider extends OrchidServiceProvider
 //            Menu::make('Charts')
 //                ->icon('bs.bar-chart')
 //                ->route('platform.example.charts'),
-//
+
 //            Menu::make('Cards')
 //                ->icon('bs.card-text')
 //                ->route('platform.example.cards')
 //                ->divider(),
-//
-//            Menu::make(__('Users'))
-//                ->icon('bs.people')
-//                ->route('platform.systems.users')
-//                ->permission('platform.systems.users')
-//                ->title(__('Access Controls')),
-//
-//            Menu::make(__('Roles'))
-//                ->icon('bs.shield')
-//                ->route('platform.systems.roles')
-//                ->permission('platform.systems.roles')
-//                ->divider(),
-//
+
+            Menu::make(__('Users'))
+                ->icon('bs.people')
+                ->route('platform.systems.users')
+                ->permission('platform.systems.users')
+                ->title(__('Access Controls')),
+
+            Menu::make(__('Roles'))
+                ->icon('bs.shield')
+                ->route('platform.systems.roles')
+                ->permission('platform.systems.roles')
+                ->divider(),
+
 //            Menu::make('Documentation')
 //                ->title('Docs')
 //                ->icon('bs.box-arrow-up-right')
@@ -108,6 +115,10 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+            ItemPermission::group(__('Отзывы клиентов'))
+                ->addPermission('platform.clients', __('Клиенты'))
+                ->addPermission('platform.analytics', __('Аналитика'))
+                ->addPermission('platform.reports', __('Отчеты')),
         ];
     }
 }
